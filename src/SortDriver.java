@@ -13,6 +13,8 @@ public class SortDriver {
                 array[num] = fileInput.nextInt();
                 num++;
             }
+            //xarray = new int[]{2, 10, 8, 5, 3, 4, 6, 9, 1, 7};
+            Sorting.PrintList(array);
             Scanner input = new Scanner(System.in);
             System.out.println("selection-sort (s) merge-sort (m) heap-sort (h) quick-sort-fp (q) quick-sort-rp (r)");
             System.out.print("Enter the algorithm: ");
@@ -34,6 +36,7 @@ public class SortDriver {
                     Sorting.QuickSortRandom(array);
                     break;
             }
+            // Sorting.PrintList(array);
         } catch (FileNotFoundException | ArrayIndexOutOfBoundsException e) {
             System.out.println("Input File Not Provided");
         }
