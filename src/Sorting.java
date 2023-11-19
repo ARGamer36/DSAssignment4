@@ -1,13 +1,15 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class Sorting {
+    private static int Comparisons;
     public static void SelectionSort(int[] input) {
-        int comparison = 0;
+        Comparisons = 0;
         int min;
         for (int i = 0; i < input.length; i++) {
             min = i;
             for (int j = i + 1; j < input.length; j++) {
-                comparison += 1;
+                Comparisons += 1;
                 if (input[j] < input[min]) {
                     min = j;
                 }
@@ -17,17 +19,15 @@ public class Sorting {
             input[min] = temp;
         }
         PrintList(input);
-        System.out.println("#Selection-sort comparisons: " + comparison);
+        System.out.println("#Selection-sort comparisons: " + Comparisons);
     }
-    private static int MergeSortComparison;
     public static void MergeSort(int[] input) {
-        MergeSortComparison = 0;
+        Comparisons = 0;
         PrintList(MergeSortRecursive(input));
-        System.out.println("#Merge-sort comparisons: " + MergeSortComparison);
+        System.out.println("#Merge-sort comparisons: " + Comparisons);
     }
     private static int[] MergeSortRecursive(int[] input) {
         if (input.length > 1) {
-            MergeSortComparison += 1;
             int midpoint = input.length / 2;
             int[] first = Arrays.copyOfRange(input, 0, midpoint);
             int[] second = Arrays.copyOfRange(input, midpoint, input.length);
@@ -44,7 +44,7 @@ public class Sorting {
         int p2 = 0;
         for (int i = 0; i < combined.length; i++) {
             if (p1 < first.length && p2 < second.length) {
-                MergeSortComparison += 1;
+                Comparisons += 1;
                 if (first[p1] < second[p2]) {
                     combined[i] = first[p1];
                     p1++;
@@ -62,9 +62,8 @@ public class Sorting {
         }
         return combined;
     }
-    private static int HeapSortComparisons;
     public static void HeapSort(int[] input) {
-        HeapSortComparisons = 0;
+        Comparisons = 0;
         for (int i = input.length/2; i >= 0; i--) {
             ReheapDown(input, i, input.length - 1);
         }
@@ -75,7 +74,7 @@ public class Sorting {
             ReheapDown(input, 0, i - 1);
         }
         PrintList(input);
-        System.out.println("#Heap-sort comparisons: " + HeapSortComparisons);
+        System.out.println("#Heap-sort comparisons: " + Comparisons);
     }
     public static void ReheapDown(int[] input, int root, int bottom) {
         int max;
@@ -85,14 +84,14 @@ public class Sorting {
             if (left == bottom) {
                 max = left;
             } else {
-                HeapSortComparisons += 1;
+                Comparisons += 1;
                 if (input[left] <= input[right]) {
                     max = right;
                 } else {
                     max = left;
                 }
             }
-            HeapSortComparisons += 1;
+            Comparisons += 1;
             if (input[root] < input[max]) {
                 int temp = input[max];
                 input[max] = input[root];
@@ -103,10 +102,59 @@ public class Sorting {
 
     }
     public static void QuickSortFirst(int[] input) {
-        throw new RuntimeException("NYI");
+        Comparisons = 0;
+        QuickSortFirst(input, 0, input.length - 1);
+        PrintList(input);
+        System.out.println("#Quick-sort-fp comparisons: " + Comparisons);
+    }
+    public static void QuickSortFirst(int[] input, int first, int last) {
+        if (first < last) {
+            int splitPoint = Split (input, first, last, first);
+            QuickSortFirst(input, first, splitPoint - 1);
+            QuickSortFirst(input, splitPoint + 1, last);
+        }
     }
     public static void QuickSortRandom(int[] input) {
-        throw new RuntimeException("NYI");
+        Comparisons = 0;
+        QuickSortRandom(input, 0, input.length - 1);
+        PrintList(input);
+        System.out.println("#Quick-sort-rp comparisons: " + Comparisons);
+    }
+    public static void QuickSortRandom(int[] input, int first, int last) {
+        if (first < last) {
+            Random random = new Random();
+            int randomNum = random.ints(first, last).findFirst().getAsInt();
+            int temp = input[first];
+            input[first] = input[randomNum];
+            input[randomNum] = temp;
+            int splitPoint = Split (input, first, last, first);
+            QuickSortRandom(input, first, splitPoint - 1);
+            QuickSortRandom(input, splitPoint + 1, last);
+        }
+    }
+    public static int Split(int[] input, int first, int last, int splitPoint) {
+        int splitVal = input[splitPoint];
+        while (first < last) {
+            Comparisons++;
+            while (input[first] <= splitVal && first < last) {
+                Comparisons++;
+                first++;
+            }
+            Comparisons++;
+            while (input[last] > splitVal) {
+                Comparisons++;
+                last--;
+            }
+            if (first < last) {
+                int temp = input[first];
+                input[first] = input[last];
+                input[last] = temp;
+            }
+        }
+        int temp = input[last];
+        input[last] = input[splitPoint];
+        input[splitPoint] = temp;
+        return last;
     }
     public static void PrintList(int[] input) {
         for (int k : input) {
